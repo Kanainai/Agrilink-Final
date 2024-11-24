@@ -1,0 +1,129 @@
+/* Order System Styles */
+
+/* Loading Indicator */
+.loading-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Vehicle Selection */
+.vehicle-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.vehicle-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.vehicle-option.selected {
+    border-color: #2C5530;
+    background-color: rgba(44, 85, 48, 0.1);
+}
+
+/* Map Containers */
+.map-container {
+    height: 400px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Route Information */
+.route-info {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+/* Progress Bar */
+.order-progress {
+    height: 8px;
+}
+
+.step-indicator {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #dee2e6;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+}
+
+.step-indicator.active {
+    border-color: #2C5530;
+    color: #2C5530;
+}
+
+.step-indicator.completed {
+    background-color: #2C5530;
+    border-color: #2C5530;
+    color: #fff;
+}
+
+/* Form Sections */
+.order-step {
+    display: none;
+}
+
+.order-step.step-1 {
+    display: block;
+}
+
+.order-step.active {
+    display: block;
+}
+
+/* Location Info */
+.location-info {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+/* Summary Section */
+.summary-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.summary-section h6 {
+    color: #2C5530;
+    border-bottom: 2px solid #2C5530;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .map-container {
+        height: 300px;
+    }
+    
+    .step-indicator {
+        width: 25px;
+        height: 25px;
+        font-size: 12px;
+    }
+}

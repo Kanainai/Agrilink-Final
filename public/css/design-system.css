@@ -1,0 +1,107 @@
+:root {
+  /* Colors */
+  --primary-green: #2C5530;
+  --primary-brown: #8B4513;
+  --primary-gold: #FFD700;
+  
+  --secondary-sage: #7C9082;
+  --secondary-fresh: #90EE90;
+  --secondary-sky: #87CEEB;
+  
+  --neutral-white: #FFFFFF;
+  --neutral-light: #F5F5F5;
+  --neutral-dark: #333333;
+  
+  --status-success: #4CAF50;
+  --status-warning: #FFC107;
+  --status-error: #FF5252;
+
+  /* Typography */
+  --font-heading: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --base-size: 14px;
+  --scale-ratio: 1.25;
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* Border Radius */
+  --radius-card: 12px;
+  --radius-button: 8px;
+
+  /* Shadows */
+  --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-card-hover: 0 8px 12px rgba(0, 0, 0, 0.15);
+  
+  /* Transitions */
+  --transition-base: all 0.3s ease;
+}
+
+/* Base Typography */
+body {
+  font-family: var(--font-body);
+  font-size: var(--base-size);
+  line-height: 1.5;
+  background-color: var(--neutral-light);
+  color: var(--neutral-dark);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* Button Styles */
+.btn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-button);
+  border: none;
+  font-weight: 600;
+  transition: var(--transition-base);
+  background: linear-gradient(135deg, var(--primary-green), var(--secondary-sage));
+  color: var(--neutral-white);
+  cursor: pointer;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+/* Card Styles */
+.card {
+  background: var(--neutral-white);
+  border-radius: var(--radius-card);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-base);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-control {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--secondary-sage);
+  border-radius: var(--radius-button);
+  font-family: var(--font-body);
+  transition: var(--transition-base);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 2px rgba(44, 85, 48, 0.2);
+} 

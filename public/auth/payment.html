@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriLink Moves - Payment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --primary-green: #2C5530;
+            --earth-brown: #8B4513;
+            --accent-gold: #FFD700;
+        }
+
+        body {
+            background: #f5f5f5;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .payment-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 2rem 0;
+        }
+
+        .payment-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-method {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary-green);
+            background: rgba(44, 85, 48, 0.05);
+        }
+
+        .payment-method.active {
+            border-color: var(--primary-green);
+            background: rgba(44, 85, 48, 0.05);
+        }
+
+        .form-control {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(44, 85, 48, 0.1);
+        }
+
+        .btn-pay {
+            background: var(--primary-green);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-pay:hover {
+            background: #234227;
+            transform: translateY(-2px);
+        }
+
+        .payment-icon {
+            font-size: 2.5rem;
+            color: var(--primary-green);
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-wrapper">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="payment-card p-4 p-md-5">
+                        <!-- Header -->
+                        <div class="text-center mb-5">
+                            <i class='bx bx-credit-card payment-icon mb-3'></i>
+                            <h1 class="h3 mb-2" style="color: var(--primary-green);">Payment Details</h1>
+                            <p class="text-muted">Complete your payment securely</p>
+                        </div>
+
+                        <!-- Order Summary -->
+                        <div class="bg-light p-4 rounded-3 mb-4">
+                            <h5 class="mb-3">Order Summary</h5>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Order Amount</span>
+                                <strong>$150.00</strong>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Service Fee</span>
+                                <strong>$10.00</strong>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <span class="h6">Total</span>
+                                <strong class="h6 text-success">$160.00</strong>
+                            </div>
+                        </div>
+
+                        <!-- Payment Form -->
+                        <form id="paymentForm">
+                            <!-- Payment Methods -->
+                            <div class="mb-4">
+                                <label class="form-label">Select Payment Method</label>
+                                <div class="payment-method active">
+                                    <div class="d-flex align-items-center">
+                                        <i class='bx bx-credit-card fs-4 me-3'></i>
+                                        <div>
+                                            <h6 class="mb-0">Credit/Debit Card</h6>
+                                            <small class="text-muted">Pay securely with your card</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="payment-method">
+                                    <div class="d-flex align-items-center">
+                                        <i class='bx bxl-paypal fs-4 me-3'></i>
+                                        <div>
+                                            <h6 class="mb-0">PayPal</h6>
+                                            <small class="text-muted">Pay easily via PayPal</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card Details -->
+                            <div class="card-details">
+                                <div class="mb-3">
+                                    <label class="form-label">Card Number</label>
+                                    <input type="text" class="form-control" placeholder="1234 5678 9012 3456" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Expiry Date</label>
+                                        <input type="text" class="form-control" placeholder="MM/YY" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">CVV</label>
+                                        <input type="text" class="form-control" placeholder="123" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-pay w-100 mt-4">
+                                Pay $160.00
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

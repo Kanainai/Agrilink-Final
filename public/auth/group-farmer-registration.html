@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriLink Moves - Group Farmer Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    <style>
+        :root {
+            --primary-green: #2C5530;
+            --earth-brown: #8B4513;
+            --accent-gold: #FFD700;
+            --sage: #7C9082;
+            --light-sage: rgba(124, 144, 130, 0.1);
+        }
+        body {
+            background: linear-gradient(135deg, rgba(44, 85, 48, 0.05), rgba(124, 144, 130, 0.05));
+            font-family: 'Inter', sans-serif;
+        }
+
+        .registration-container {
+            padding: 2rem 0;
+        }
+
+        .registration-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .registration-header {
+            background: linear-gradient(135deg, var(--primary-green), var(--sage));
+            padding: 2rem;
+            border-radius: 16px 16px 0 0;
+            color: white;
+            text-align: center;
+        }
+
+        .registration-form {
+            padding: 2rem;
+        }
+
+        .form-section {
+            border-left: 4px solid var(--primary-green);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--earth-brown);
+        }
+
+        .form-section h3 {
+            color: var(--primary-green);
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        input, select {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px var(--light-sage);
+            outline: none;
+        }
+        
+        .register-btn {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .register-btn:hover {
+            background: var(--sage);
+            transform: translateY(-2px);
+        }
+
+        .registration-footer {
+            text-align: center;
+            padding: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .registration-footer a {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .password-input {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <div class="registration-card">
+            <div class="registration-header">
+                <h1 style="color: var(--primary-color);">Group Registration</h1>
+                <p>Register your Farmer Group with AgriLink Moves</p>
+            </div>
+            <div class="container pt-4">
+                <a href="farmer-registration.html" class="btn btn-outline-secondary mb-4">
+                    <i class='bx bx-arrow-back'></i> Back to Farmer Options
+                </a>
+            </div>
+            <form id="groupFarmerRegistrationForm" class="registration-form">
+                <!-- Group Information -->
+                <div class="form-section">
+                    <h3>Group Information</h3>
+                    <div class="form-group">
+                        <label for="groupName">Group Name</label>
+                        <input type="text" id="groupName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="memberCount">Number of Members</label>
+                        <input type="number" id="memberCount" required>
+                    </div>
+                </div>
+
+                <!-- Farm Information -->
+                <div class="form-section">
+                    <h3>Farm Information</h3>
+                    <div class="form-group">
+                        <label for="totalFarmSize">Total Farm Size (hectares)</label>
+                        <input type="number" id="totalFarmSize" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cropTypes">Crop Types</label>
+                        <select id="cropTypes" multiple required>
+                            <option value="rice">Rice</option>
+                            <option value="corn">Corn</option>
+                            <option value="vegetables">Vegetables</option>
+                            <option value="fruits">Fruits</option>
+                            <option value="coffee">Coffee</option>
+                            <option value="cacao">Cacao</option>
+                            <option value="sugarcane">Sugarcane</option>
+                            <option value="coconut">Coconut</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Representative Information -->
+                <div class="form-section">
+                    <h3>Representative Information</h3>
+                    <div class="form-group">
+                        <label for="representativeName">Representative Name</label>
+                        <input type="text" id="representativeName" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="region">Region</label>
+                            <input type="text" id="region" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Security -->
+                <div class="form-section">
+                    <h3>Account Security</h3>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="password" required>
+                            <i class='bx bx-hide toggle-password'></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="password-input">
+                            <input type="password" id="confirmPassword" required>
+                            <i class='bx bx-hide toggle-password'></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="h-captcha mb-3" data-sitekey="10000000-ffff-ffff-ffff-000000000001"></div>
+                <button type="submit" class="register-btn">Register Group</button>
+            </form>
+            <div class="registration-footer">
+                <p>Already have an account? <a href="login.html">Login here</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="../js/common.js"></script>
+    <script>
+    document.getElementById('groupFarmerRegistrationForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        
+        try {
+            const submitButton = event.target.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Registering...';
+
+            // Validate required fields
+            const requiredFields = {
+                'groupName': 'Group name',
+                'memberCount': 'Number of members',
+                'totalFarmSize': 'Total farm size',
+                'representativeName': 'Representative name',
+                'email': 'Email',
+                'phone': 'Phone number',
+                'address': 'Address',
+                'city': 'City',
+                'region': 'Region',
+                'password': 'Password',
+                'confirmPassword': 'Confirm password'
+            };
+
+            // Check each required field
+            for (const [fieldId, fieldName] of Object.entries(requiredFields)) {
+                const input = document.getElementById(fieldId);
+                if (!input.value.trim()) {
+                    throw new Error(`${fieldName} is required`);
+                }
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const email = document.getElementById('email').value;
+            if (!emailRegex.test(email)) {
+                throw new Error('Please enter a valid email address');
+            }
+
+            // Validate password
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password.length < 6) {
+                throw new Error('Password must be at least 6 characters long');
+            }
+
+            if (password !== confirmPassword) {
+                throw new Error('Passwords do not match');
+            }
+
+            // Validate member count
+            const memberCount = parseInt(document.getElementById('memberCount').value);
+            if (isNaN(memberCount) || memberCount <= 0) {
+                throw new Error('Please enter a valid number of members');
+            }
+
+            // Validate farm size
+            const farmSize = parseFloat(document.getElementById('totalFarmSize').value);
+            if (isNaN(farmSize) || farmSize <= 0) {
+                throw new Error('Please enter a valid farm size');
+            }
+
+            // Validate crop types selection
+            const cropTypesSelect = document.getElementById('cropTypes');
+            const cropTypes = Array.from(cropTypesSelect.selectedOptions).map(option => option.value);
+            if (cropTypes.length === 0) {
+                throw new Error('Please select at least one crop type');
+            }
+
+            // Get captcha token
+            const token = hcaptcha.getResponse();
+            if (!token) {
+                throw new Error('Please complete the captcha verification');
+            }
+
+            // Prepare form data
+            const formData = {
+                email: email,
+                password: password,
+                groupName: document.getElementById('groupName').value,
+                representativeName: document.getElementById('representativeName').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                region: document.getElementById('region').value,
+                memberCount: memberCount,
+                farmSize: farmSize,
+                cropTypes: cropTypes,
+                captchaToken: token
+            };
+
+            console.log('Sending registration data:', formData);
+
+            // Send registration request
+            const response = await fetch('/api/auth/register/group-farmer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Registration failed');
+            }
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // Show success message
+                const successDiv = document.createElement('div');
+                successDiv.className = 'alert alert-success mb-3';
+                successDiv.textContent = 'Registration successful! Redirecting to login...';
+                document.getElementById('groupFarmerRegistrationForm').insertBefore(
+                    successDiv,
+                    document.querySelector('.h-captcha')
+                );
+
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = '/auth/login.html';
+                }, 2000);
+            } else {
+                throw new Error(data.message || 'Registration failed');
+            }
+
+        } catch (error) {
+            console.error('Registration error:', error);
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-danger mb-3';
+            errorDiv.textContent = error.message;
+            document.getElementById('groupFarmerRegistrationForm').insertBefore(
+                errorDiv,
+                document.querySelector('.h-captcha')
+            );
+        } finally {
+            const submitButton = event.target.querySelector('button[type="submit"]');
+            submitButton.disabled = false;
+            submitButton.textContent = 'Register Group';
+            hcaptcha.reset();
+        }
+    });
+
+    // Add password visibility toggle
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', () => {
+            const input = icon.previousElementSibling;
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bx-hide');
+                icon.classList.add('bx-show');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bx-show');
+                icon.classList.add('bx-hide');
+            }
+        });
+    });
+    </script>
+</body>
+</html>

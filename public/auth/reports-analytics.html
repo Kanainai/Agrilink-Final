@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriLink Moves - Reports & Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-green: #2C5530;
+            --earth-brown: #8B4513;
+            --accent-gold: #FFD700;
+            --sage: #7C9082;
+        }
+
+        body {
+            background: #f5f5f5;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .analytics-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .metric-card {
+            border-left: 4px solid var(--primary-green);
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .btn-custom {
+            background: var(--primary-green);
+            color: white;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background: #234227;
+            color: white;
+        }
+
+        .date-filter {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+        }
+
+        .trend-indicator {
+            font-size: 0.875rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .trend-up {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+
+        .trend-down {
+            background: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="mb-1">Reports & Analytics</h4>
+                <p class="text-muted mb-0">Track and analyze business performance</p>
+            </div>
+            <div class="d-flex gap-3">
+                <select class="form-select date-filter">
+                    <option>Last 7 Days</option>
+                    <option>Last 30 Days</option>
+                    <option>Last 3 Months</option>
+                    <option>Last Year</option>
+                </select>
+                <button class="btn btn-custom">
+                    <i class='bx bx-download me-2'></i>Export Report
+                </button>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0">Total Revenue</h6>
+                        <span class="trend-indicator trend-up">
+                            <i class='bx bx-up-arrow-alt'></i> 12.5%
+                        </span>
+                    </div>
+                    <h3 class="mb-0">$52,489</h3>
+                    <small class="text-muted">vs $46,658 last period</small>
+                </div>
+            </div>
+            <!-- Add more metric cards -->
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-8">
+                <div class="analytics-card p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0">Revenue Trends</h5>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-secondary btn-sm active">Daily</button>
+                            <button class="btn btn-outline-secondary btn-sm">Weekly</button>
+                            <button class="btn btn-outline-secondary btn-sm">Monthly</button>
+                        </div>
+                    </div>
+                    <canvas id="revenueChart" height="300"></canvas>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="analytics-card p-4">
+                    <h5 class="mb-4">Order Distribution</h5>
+                    <canvas id="orderDistributionChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Analytics -->
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="analytics-card p-4">
+                    <h5 class="mb-4">Top Performing Routes</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Route</th>
+                                    <th>Orders</th>
+                                    <th>Revenue</th>
+                                    <th>Growth</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Farm A → Market B</td>
+                                    <td>245</td>
+                                    <td>$12,450</td>
+                                    <td>
+                                        <span class="trend-indicator trend-up">+15%</span>
+                                    </td>
+                                </tr>
+                                <!-- Add more rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="analytics-card p-4">
+                    <h5 class="mb-4">Driver Performance</h5>
+                    <canvas id="driverPerformanceChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [12000, 19000, 15000, 25000, 22000, 30000, 28000],
+                    borderColor: '#2C5530',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Order Distribution Chart
+        const distributionCtx = document.getElementById('orderDistributionChart').getContext('2d');
+        new Chart(distributionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Vegetables', 'Fruits', 'Grains', 'Others'],
+                datasets: [{
+                    data: [40, 30, 20, 10],
+                    backgroundColor: ['#2C5530', '#8B4513', '#FFD700', '#7C9082']
+                }]
+            }
+        });
+
+        // Driver Performance Chart
+        const driverCtx = document.getElementById('driverPerformanceChart').getContext('2d');
+        new Chart(driverCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Driver A', 'Driver B', 'Driver C', 'Driver D'],
+                datasets: [{
+                    label: 'Deliveries Completed',
+                    data: [150, 120, 140, 110],
+                    backgroundColor: '#2C5530'
+                }]
+            }
+        });
+    </script>
+</body>
+</html> 

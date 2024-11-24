@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Order - AgriLink Moves</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="../css/order-system.css">
+    <style>
+        .map-container {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        #pickupMap, #deliveryMap {
+            height: 100%;
+            width: 100%;
+        }
+
+        .mapboxgl-canvas {
+            height: 100% !important;
+            width: 100% !important;
+        }
+
+        .mapboxgl-ctrl-geocoder {
+            width: 100% !important;
+            max-width: none !important;
+            margin-bottom: 15px;
+        }
+
+        .order-step {
+            display: none;
+        }
+
+        .order-step.step-1 {
+            display: block;
+        }
+
+        .progress {
+            height: 4px;
+            margin-bottom: 20px;
+        }
+        .step-indicator {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            border: 2px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+        .step-indicator.active {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+            color: white;
+        }
+        .step-indicator.completed {
+            background-color: #198754;
+            border-color: #198754;
+            color: white;
+        }
+        .vehicle-option {
+            cursor: pointer;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        .vehicle-option:hover {
+            border-color: #0d6efd;
+            background-color: #f8f9fa;
+        }
+        .vehicle-option.selected {
+            border-color: #0d6efd;
+            background-color: #e7f1ff;
+        }
+
+        /* Payment Methods Styling */
+        .payment-method-card .card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .payment-method-card .card:hover {
+            transform: translateY(-2px);
+            border-color: #0d6efd;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+
+        .payment-logo {
+            object-fit: contain;
+        }
+
+        /* Modal Styling */
+        .modal-header {
+            border-bottom: 0;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        /* Form Styling */
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #0d6efd;
+        }
+
+        .input-group-text {
+            background-color: #f8f9fa;
+        }
+
+        /* Card Icons */
+        .bxl-visa, .bxl-mastercard {
+            font-size: 1.5rem;
+            color: #6c757d;
+        }
+
+        /* Loading Spinner */
+        .spinner-border {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* Success Message */
+        .alert-success {
+            background-color: #d1e7dd;
+            border-color: #badbcc;
+            color: #0f5132;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 class="mb-4">Create New Order</h2>
+
+        <!-- Progress Bar -->
+        <div class="progress mb-4">
+            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+        </div>
+
+        <!-- Step Indicators -->
+        <div class="row mb-4 text-center">
+            <div class="col">
+                <div class="step-indicator active">1</div>
+                <small>Pickup</small>
+            </div>
+            <div class="col">
+                <div class="step-indicator">2</div>
+                <small>Delivery</small>
+            </div>
+            <div class="col">
+                <div class="step-indicator">3</div>
+                <small>Cargo</small>
+            </div>
+            <div class="col">
+                <div class="step-indicator">4</div>
+                <small>Summary</small>
+            </div>
+            <div class="col">
+                <div class="step-indicator">5</div>
+                <small>Payment</small>
+            </div>
+        </div>
+
+        <!-- Step 1: Pickup Location -->
+        <div class="order-step step-1">
+            <h4 class="mb-3">Select Pickup Location</h4>
+            <div id="pickupGeocoder" class="mb-3"></div>
+            <div class="map-container">
+                <div id="pickupMap"></div>
+            </div>
+            <div id="pickupInfo" class="card mb-3 d-none">
+                <div class="card-body"></div>
+            </div>
+            <div id="routeInfo" class="card mb-3 d-none"></div>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary btn-next">Next</button>
+            </div>
+        </div>
+
+       <!-- Step 2: Delivery Location -->
+       <div class="order-step step-2">
+           <h4 class="mb-3">Select Delivery Location</h4>
+           <div id="deliveryGeocoder" class="mb-3"></div>
+           <div class="map-container">
+               <div id="deliveryMap"></div>
+           </div>
+           <div id="deliveryInfo" class="card mb-3 d-none">
+               <div class="card-body"></div>
+           </div>
+           <div id="routeInfo2" class="card mb-3 d-none"></div>
+           <div class="d-flex justify-content-between">
+               <button class="btn btn-secondary btn-prev">Back</button>
+               <button class="btn btn-primary btn-next">Next</button>
+           </div>
+       </div>
+
+        <!-- Step 3: Cargo Details -->
+        <div class="order-step step-3">
+            <h4 class="mb-3">Cargo Details</h4>
+            <div class="mb-4">
+                <label class="form-label">Cargo Type</label>
+                <div class="d-flex flex-wrap gap-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="cargoType" value="Fresh Produce" id="typeProduce">
+                        <label class="form-check-label" for="typeProduce">Fresh Produce</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="cargoType" value="Grains" id="typeGrains">
+                        <label class="form-check-label" for="typeGrains">Grains</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="cargoType" value="Dairy" id="typeDairy">
+                        <label class="form-check-label" for="typeDairy">Dairy Products</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="cargoType" value="Meat" id="typeMeat">
+                        <label class="form-check-label" for="typeMeat">Meat Products</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="cargoType" value="Other" id="typeOther">
+                        <label class="form-check-label" for="typeOther">Other</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="cargoWeight" class="form-label">Cargo Weight (tons)</label>
+                <div class="input-group">
+                    <input type="number" class="form-control" id="cargoWeight" min="0.1" step="0.1" required>
+                    <span class="input-group-text">tons</span>
+                </div>
+                <small class="form-text text-muted">Enter weight in metric tons (1 ton = 1000 kg)</small>
+            </div>
+
+            <div class="mb-4">
+                <label for="cargoInstructions" class="form-label">Special Instructions (Optional)</label>
+                <textarea class="form-control" id="cargoInstructions" rows="3"></textarea>
+            </div>
+
+            <div id="vehicleSuggestion" class="alert alert-info d-none">
+                <i class='bx bx-info-circle me-2'></i>
+                <span class="suggestion-text"></span>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Select Vehicle Type</label>
+                <div class="vehicle-options">
+                    <div class="vehicle-option" data-vehicle="pickup">
+                        <div class="d-flex align-items-center">
+                            <div class="vehicle-icon me-3">
+                                <i class='bx bx-truck' style="font-size: 2rem;"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-2">Pickup Truck</h5>
+                                <p class="mb-1"><i class='bx bx-package me-2'></i>Capacity: 1 ton</p>
+                                <p class="mb-0"><i class='bx bx-money me-2'></i>Rate: KES 200/km</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vehicle-option" data-vehicle="van">
+                        <div class="d-flex align-items-center">
+                            <div class="vehicle-icon me-3">
+                                <i class='bx bx-truck' style="font-size: 2rem;"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-2">Delivery Van</h5>
+                                <p class="mb-1"><i class='bx bx-package me-2'></i>Capacity: 2 tons</p>
+                                <p class="mb-0"><i class='bx bx-money me-2'></i>Rate: KES 300/km</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vehicle-option" data-vehicle="light">
+                        <div class="d-flex align-items-center">
+                            <div class="vehicle-icon me-3">
+                                <i class='bx bx-truck' style="font-size: 2rem;"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-2">Light Truck</h5>
+                                <p class="mb-1"><i class='bx bx-package me-2'></i>Capacity: 5 tons</p>
+                                <p class="mb-0"><i class='bx bx-money me-2'></i>Rate: KES 350/km</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vehicle-option" data-vehicle="heavy">
+                        <div class="d-flex align-items-center">
+                            <div class="vehicle-icon me-3">
+                                <i class='bx bx-truck' style="font-size: 2rem;"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-2">Heavy Truck</h5>
+                                <p class="mb-1"><i class='bx bx-package me-2'></i>Capacity: 10 tons</p>
+                                <p class="mb-0"><i class='bx bx-money me-2'></i>Rate: KES 500/km</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-secondary btn-prev">Previous</button>
+                <button class="btn btn-primary btn-next">Next</button>
+            </div>
+        </div>
+
+        <!-- Step 4: Summary -->
+        <div class="step" id="step4" style="display: none;">
+            <h4 class="mb-4">Order Summary</h4>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Route Details</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Pickup Location:</strong><br><span id="summaryPickup">-</span></p>
+                            <p><strong>Delivery Location:</strong><br><span id="summaryDelivery">-</span></p>
+                            <p><strong>Distance:</strong><br><span id="summaryDistance">-</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Cargo Type:</strong><br><span id="summaryCargoType">-</span></p>
+                            <p><strong>Cargo Weight:</strong><br><span id="summaryCargoWeight">-</span></p>
+                            <p><strong>Special Instructions:</strong><br><span id="summaryInstructions">-</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Vehicle & Pricing</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Selected Vehicle:</strong><br><span id="summaryVehicle">-</span></p>
+                            <p><strong>Rate:</strong><br><span id="summaryRate">-</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Total Price:</strong><br><span class="fs-4 fw-bold text-primary" id="summaryTotal">KES 0.00</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-secondary btn-prev">Back</button>
+                <button class="btn btn-primary btn-next">Proceed to Payment</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Payment -->
+        <div class="step" id="step5" style="display: none;">
+            <h4 class="mb-4">Payment Details</h4>
+            <div class="payment-summary card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Order Summary</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total Amount:</span>
+                        <span class="fw-bold" id="paymentAmount">KES 0.00</span>
+                    </div>
+                    <hr>
+                    <div class="alert alert-info mb-0">
+                        <i class="bx bx-info-circle me-2"></i>
+                        Select your preferred payment method below
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-methods">
+                <h5 class="mb-3">Payment Methods</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="payment-method-card">
+                            <div class="card h-100 cursor-pointer" onclick="window.orderSystem.showMpesaPayment()">
+                                <div class="card-body d-flex align-items-center">
+                                    <img src="/images/mpesa-logo.png" alt="M-Pesa" class="payment-logo me-3" style="width: 48px; height: 48px;">
+                                    <div>
+                                        <h6 class="mb-1">M-Pesa</h6>
+                                        <p class="text-muted mb-0">Pay with M-Pesa mobile money</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="payment-method-card">
+                            <div class="card h-100 cursor-pointer" onclick="window.orderSystem.showCardPayment()">
+                                <div class="card-body d-flex align-items-center">
+                                    <i class="bx bx-credit-card fs-1 me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Card Payment</h6>
+                                        <p class="text-muted mb-0">Pay with credit/debit card</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-secondary btn-prev">Back</button>
+                <button class="btn btn-primary btn-next" disabled>Complete Order</button>
+            </div>
+        </div>
+
+        <!-- M-Pesa Payment Modal -->
+        <div class="modal fade" id="mpesaModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title">
+                            <img src="/images/mpesa-logo.png" alt="M-Pesa" style="width: 32px; height: 32px;" class="me-2">
+                            M-Pesa Payment
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center mb-4">
+                            <h4 class="mb-2" id="mpesaAmount">KES 0.00</h4>
+                            <p class="text-muted">Enter your M-Pesa registered phone number below</p>
+                        </div>
+                        <form id="mpesaForm" class="needs-validation" novalidate>
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">+254</span>
+                                    <input type="tel" class="form-control" placeholder="7XX XXX XXX" pattern="[0-9]{9}" required>
+                                    <div class="invalid-feedback">Please enter a valid phone number</div>
+                                </div>
+                                <small class="text-muted">Format: 7XXXXXXXX</small>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bx bx-check-circle me-2"></i>Process M-Pesa Payment
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Payment Modal -->
+        <div class="modal fade" id="cardModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">
+                            <i class="bx bx-credit-card me-2"></i>
+                            Card Payment
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center mb-4">
+                            <h4 class="mb-2" id="cardAmount">KES 0.00</h4>
+                            <p class="text-muted">Enter your card details below</p>
+                        </div>
+                        <form id="cardForm" class="needs-validation" novalidate>
+                            <div class="mb-3">
+                                <label class="form-label">Card Number</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="1234 5678 9012 3456" pattern="[0-9]{16}" required>
+                                    <span class="input-group-text">
+                                        <i class="bx bxl-visa"></i>
+                                        <i class="bx bxl-mastercard ms-2"></i>
+                                    </span>
+                                </div>
+                                <small class="text-muted">Enter 16 digits without spaces</small>
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <label class="form-label">Expiry Date</label>
+                                    <input type="text" class="form-control" placeholder="MM/YY" pattern="(0[1-9]|1[0-2])\/([0-9]{2})" required>
+                                    <small class="text-muted">Format: MM/YY (e.g., 05/25)</small>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">CVV</label>
+                                    <input type="password" class="form-control" placeholder="123" pattern="[0-9]{3,4}" required>
+                                    <small class="text-muted">3 or 4 digits on back of card</small>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Card Holder Name</label>
+                                <input type="text" class="form-control" placeholder="John Doe" required>
+                                <small class="text-muted">Enter name exactly as shown on card</small>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bx bx-check-circle me-2"></i>Process Card Payment
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Initialize Supabase client globally
+        const { createClient } = supabase;
+    </script>
+    <script>
+        // Check for active session
+        function checkSession() {
+            const session = localStorage.getItem('userSession');
+            if (!session) {
+                window.location.href = '/auth/login.html';
+            }
+        }
+        
+        // Run check immediately
+        checkSession();
+    </script>
+    <script src="../js/order-system.js"></script>
+    <script src="../js/init-order.js"></script>
+</body>
+</html>

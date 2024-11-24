@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriLink Moves - Order Tracking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --primary-green: #2C5530;
+            --earth-brown: #8B4513;
+            --accent-gold: #FFD700;
+        }
+
+        body {
+            background: #f5f5f5;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tracking-wrapper {
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        .tracking-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .tracking-step {
+            position: relative;
+            padding-left: 45px;
+            margin-bottom: 2rem;
+        }
+
+        .tracking-step:before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: #e0e0e0;
+        }
+
+        .tracking-step:last-child:before {
+            display: none;
+        }
+
+        .step-icon {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-green);
+        }
+
+        .step-completed .step-icon {
+            background: var(--accent-gold);
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-control {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .btn-track {
+            background: var(--primary-green);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-track:hover {
+            background: #234227;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="tracking-wrapper">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <!-- Header -->
+                    <div class="text-center mb-4">
+                        <i class='bx bx-map-pin fs-1 mb-3' style="color: var(--primary-green);"></i>
+                        <h1 class="h3 mb-2" style="color: var(--primary-green);">Track Your Order</h1>
+                        <p class="text-muted">Enter your order ID to track your shipment</p>
+                    </div>
+
+                    <!-- Add this button after the header section -->
+                    <div class="mb-4">
+                        <button class="btn btn-outline-primary" onclick="window.location.href='/auth/new-farmer-dashboard.html'">
+                            <i class='bx bx-arrow-back me-2'></i> Back to Dashboard
+                        </button>
+                    </div>
+                    <!-- Tracking Result -->
+                    <div class="tracking-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="mb-0">Loading order details...</h5>
+                            <span class="badge bg-secondary">Loading...</span>
+                        </div>
+
+                        <!-- Tracking Timeline -->
+                        <div class="tracking-timeline">
+                            <div class="text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Details -->
+                        <div class="mt-4 pt-4 border-top">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <h6>Pickup Location</h6>
+                                    <p class="text-muted mb-0">Loading...</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <h6>Delivery Location</h6>
+                                    <p class="text-muted mb-0">Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shipment Information -->
+                        <div class="mt-4 pt-4 border-top">
+                            <h6 class="mb-3">Shipment Details</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <small class="text-muted d-block">Product Type</small>
+                                    <p class="mb-0" id="productType">Loading...</p>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <small class="text-muted d-block">Total Cost</small>
+                                    <p class="mb-0" id="totalCost">Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        async function fetchOrderTracking() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const orderId = urlParams.get('id');
+                if (!orderId) {
+                    console.error('No order ID provided');
+                    return;
+                }
+
+                const session = localStorage.getItem('userSession');
+                if (!session) {
+                    window.location.href = '/auth/login.html';
+                    return;
+                }
+
+                const response = await fetch(`/api/orders/${orderId}/tracking`, {
+                    headers: {
+                        'Authorization': `Bearer ${JSON.parse(session).access_token}`,
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    console.error('API Response:', text);
+                    throw new Error(`Failed to fetch order: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                if (!data.success) throw new Error(data.error);
+
+                updateTrackingUI(data.order);
+            } catch (error) {
+                console.error('Error fetching order:', error);
+                document.querySelector('.tracking-card').innerHTML = `
+                    <div class="alert alert-danger">
+                        Failed to load tracking information. Please try again later.
+                    </div>
+                `;
+            }
+        }
+
+        function updateTrackingUI(order) {
+            // Update order ID and basic info
+            document.querySelector('h5').textContent = `Order #${order.order_id}`;
+            document.querySelector('#productType').textContent = order.goods_type;
+            document.querySelector('#totalCost').textContent = `KES ${order.total_cost.toLocaleString()}`;
+            
+            // Update status badge and color
+            const badge = document.querySelector('.badge');
+            badge.textContent = order.status;
+            badge.className = `badge ${getStatusBadgeClass(order.status)}`;
+            
+            // Update locations
+            document.querySelector('.col-md-6:nth-child(1) p').textContent = order.pickup_address;
+            document.querySelector('.col-md-6:nth-child(2) p').textContent = order.delivery_address;
+            
+            // Update tracking steps based on status
+            const timeline = document.querySelector('.tracking-timeline');
+            timeline.innerHTML = generateTrackingSteps(order);
+        }
+
+        function generateTrackingSteps(order) {
+            const steps = [];
+            const orderDate = new Date(order.order_date);
+            
+            steps.push({
+                title: 'Order Confirmed',
+                date: orderDate.toLocaleString(),
+                completed: true
+            });
+
+            if (order.status !== 'PENDING') {
+                steps.push({
+                    title: 'Picked Up',
+                    date: order.pickup_date ? new Date(order.pickup_date).toLocaleString() : 'Pending',
+                    completed: order.status !== 'PENDING'
+                });
+            }
+
+            if (order.status === 'IN_TRANSIT' || order.status === 'COMPLETED') {
+                const trackingUpdates = order.tracking || [];
+                trackingUpdates.forEach(update => {
+                    steps.push({
+                        title: 'In Transit',
+                        date: update.timestamp ? new Date(update.timestamp).toLocaleString() : 'In Progress',
+                        completed: order.status === 'COMPLETED'
+                    });
+                });
+            }
+
+            steps.push({
+                title: 'Delivery',
+                date: order.delivery_date ? new Date(order.delivery_date).toLocaleString() : 'Expected soon',
+                completed: order.status === 'COMPLETED'
+            });
+
+            return steps.map(step => `
+                <div class="tracking-step ${step.completed ? 'step-completed' : ''}">
+                    <div class="step-icon"></div>
+                    <h6 class="mb-1">${step.title}</h6>
+                    <p class="text-muted mb-0">${step.date}</p>
+                </div>
+            `).join('');
+        }
+
+        // Add this helper function
+        function getStatusBadgeClass(status) {
+            const statusClasses = {
+                'PENDING': 'bg-warning',
+                'IN_TRANSIT': 'bg-primary',
+                'COMPLETED': 'bg-success',
+                'CANCELLED': 'bg-danger'
+            };
+            return statusClasses[status] || 'bg-secondary';
+        }
+
+        // Fetch tracking data when page loads
+        document.addEventListener('DOMContentLoaded', fetchOrderTracking);
+    </script>
+</body>
+</html> 

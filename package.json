@@ -1,0 +1,25 @@
+{
+  "name": "kanainais-project",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@hcaptcha/react-hcaptcha": "^1.4.4",
+    "@supabase/auth-js": "^2.65.1",
+    "@supabase/supabase-js": "^2.46.1",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1",
+    "nodemon": "^3.1.7"
+  }
+}

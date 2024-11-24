@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriLink Moves - Connecting Farmers to Markets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --primary-green: #2C5530;
+            --light-green: #3d7042;
+            --earth-brown: #8B4513;
+            --accent-gold: #FFD700;
+            --sage: #7C9082;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #333;
+        }
+
+        .navbar {
+            padding: 1rem 0;
+            background: var(--primary-green);
+        }
+
+        .navbar-brand img {
+            height: 40px;
+        }
+
+        .nav-link {
+            color: var(--white) !important;
+            margin: 0 1rem;
+            font-weight: 500;
+        }
+
+        .hero-section {
+            background: var(--primary-green);
+            padding: 6rem 0;
+            color: var(--white);
+        }
+
+        .stats-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stats-card h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-section {
+            padding: 6rem 0;
+            background: #f8f9fa;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            height: 100%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-green);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon i {
+            font-size: 28px;
+            color: var(--white);
+        }
+
+        .how-it-works {
+            padding: 6rem 0;
+        }
+
+        .step-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            height: 100%;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 2rem;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-green);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .testimonial-section {
+            padding: 6rem 0;
+            background: #f8f9fa;
+        }
+
+        .testimonial-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            height: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta-section {
+            padding: 6rem 0;
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .footer {
+            padding: 4rem 0;
+            background: #333;
+            color: var(--white);
+        }
+
+        .btn-custom {
+            background: var(--light-green);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background: var(--primary-green);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: var(--white);
+            color: var(--primary-green);
+        }
+
+        .section-title {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/logo.png" alt="AgriLink">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#testimonials">Testimonials</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="auth/login.html" class="btn btn-outline">Login</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <a href="auth/register.html" class="btn btn-custom">Get Started</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h1 class="display-4 fw-bold mb-4">Connecting Farmers to Markets with Efficient Transportation</h1>
+                    <p class="lead mb-4">AgriLink Moves streamlines agricultural logistics, making it easier for farmers to transport their produce to markets while ensuring freshness and reliability.</p>
+                    <div class="d-flex gap-3">
+                        <a href="auth/register.html" class="btn btn-custom">Get Started</a>
+                        <a href="#how-it-works" class="btn btn-outline">Learn More</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row g-4">
+                        <div class="col-6">
+                            <div class="stats-card">
+                                <h2>1000+</h2>
+                                <p class="mb-0">Farmers Connected</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stats-card">
+                                <h2>50+</h2>
+                                <p class="mb-0">Markets Reached</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stats-card">
+                                <h2>95%</h2>
+                                <p class="mb-0">On-time Delivery</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stats-card">
+                                <h2>24/7</h2>
+                                <p class="mb-0">Support</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="feature-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Choose AgriLink Moves?</h2>
+                <p>We provide comprehensive solutions for agricultural transportation needs</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class='bx bx-map'></i>
+                        </div>
+                        <h4>Real-time Tracking</h4>
+                        <p>Monitor your shipments in real-time and ensure timely delivery of your produce to the market.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class='bx bx-calendar'></i>
+                        </div>
+                        <h4>Flexible Scheduling</h4>
+                        <p>Plan your deliveries according to your harvest timeline and market demands.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class='bx bx-shield'></i>
+                        </div>
+                        <h4>Secure Transport</h4>
+                        <p>Your produce is handled with care and transported in temperature-controlled vehicles.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How It Works</h2>
+                <p>Get your produce to market in four simple steps</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h5>Register</h5>
+                        <p>Create your account and complete your profile with relevant details.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h5>Schedule Pickup</h5>
+                        <p>Book a pickup time that aligns with your harvest schedule.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h5>Track Delivery</h5>
+                        <p>Monitor your shipment's progress in real-time until delivery.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <h5>Complete Delivery</h5>
+                        <p>Receive confirmation once your produce reaches its destination.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimonial-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Users Say</h2>
+                <p>Hear from farmers who have transformed their logistics with AgriLink Moves</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p class="mb-4">"AgriLink Moves has revolutionized how I transport my produce. The real-time tracking gives me peace of mind."</p>
+                        <div class="d-flex align-items-center">
+                            <img src="assets/farmer1.jpg" alt="Farmer" class="rounded-circle me-3" width="50">
+                            <div>
+                                <h6 class="mb-1">John D.</h6>
+                                <p class="mb-0 text-muted">Vegetable Farmer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p class="mb-4">"The flexible scheduling has made it so much easier to plan my deliveries. Highly recommended!"</p>
+                        <div class="d-flex align-items-center">
+                            <img src="assets/farmer2.jpg" alt="Farmer" class="rounded-circle me-3" width="50">
+                            <div>
+                                <h6 class="mb-1">Sarah M.</h6>
+                                <p class="mb-0 text-muted">Fruit Grower</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p class="mb-4">"Excellent service and reliable transportation. My produce always arrives fresh and on time."</p>
+                        <div class="d-flex align-items-center">
+                            <img src="assets/farmer3.jpg" alt="Farmer" class="rounded-circle me-3" width="50">
+                            <div>
+                                <h6 class="mb-1">Michael R.</h6>
+                                <p class="mb-0 text-muted">Organic Farmer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-5 bg-primary text-white" style="background: var(--primary-green) !important;">
+        <div class="container py-5 text-center">
+            <h2 class="mb-4">Ready to Transform Your Agricultural Logistics?</h2>
+            <p class="lead mb-4">Join thousands of farmers who trust AgriLink Moves for their transportation needs</p>
+            <a href="auth/register.html" class="btn btn-lg btn-outline-custom">Get Started Today</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-5 bg-light">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <img src="assets/logo.svg" alt="AgriLink" height="40" class="mb-3">
+                    <p class="text-muted">Connecting farmers to markets with efficient and reliable transportation solutions.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').classList.add('scrolled');
+            } else {
+                document.querySelector('.navbar').classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html> 
